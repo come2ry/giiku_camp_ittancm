@@ -1,0 +1,40 @@
+<html>
+    <script>
+        window.onload = function(){
+            // 以下1日の開始時刻例
+            let day_start_at = "08:00";
+            // 以下1日の終了時刻例
+            let day_end_at = "23:30";
+            // 以下1日のタスクのリスト例
+            let tasks = [
+                {
+                    "title": "タスク1",
+                    "task_time_min": 30,
+                    "start_at": "09:00",
+                    "is_fix": true
+                },
+                {
+                    "title": "タスク2",
+                    "task_time_min": 60,
+                    "start_at": "",
+                    "is_fix": false
+                },
+                {
+                    "title": "タスク3",
+                    "task_time_min": 150,
+                    "start_at": "",
+                    "is_fix": false
+                },
+                {
+                    "title": "タスク4",
+                    "task_time_min": 10,
+                    "start_at": "",
+                    "is_fix": false
+                }
+            ];
+            
+            SCHEDULE_UTIL.shuffle(tasks);
+        }
+    </script>
+    <script src="./schedule.js"></script>
+</html>
