@@ -1,5 +1,6 @@
 import React from 'react';
 import { Subscribe } from "unstated";
+import AppContainer from "../../store/AppContainer";
 
 // タスクをギュインギュイン回してスケジュールを再生成するアニメーションのコンポーネント
 class Scheduling extends React.Component{

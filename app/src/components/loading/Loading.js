@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { Subscribe } from "unstated";
 import AppContainer from "../../store/AppContainer";
-import SchedulingWrapper from './scheduling';
+import SchedulingWrapper from './Scheduling';
 
 class Loading extends React.Component{
 
