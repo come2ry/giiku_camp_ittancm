@@ -1,20 +1,13 @@
 var SCHEDULE_UTIL = {
     // 予定表シャッフル
     shuffle: function(schedule, ignore_sleep=true){
-        schedule.forEach(function(s){
-            if (s.start_at == ""){
-                s["start_at_int"] = "";
-            } else{
-                let res = s.start_at.split(":");
-                s["start_at_int"] = parseInt(res[0]) * 60 + parseInt(res[1]);
-            }
-        });
-        if (ignore_sleep){
-            let sorted = SCHEDULE_UTIL._sort(schedule);
-            let splited = SCHEDULE_UTIL._splitFromFix(sorted);
-            console.log(sorted);
-        }
+        schedule = SCHEDULE_UTIL.set_start_at_int(schedule);
+        let sorted = SCHEDULE_UTIL._sort(schedule);
+        let splited = SCHEDULE_UTIL._splitFromFix(sorted);
+        //console.log(sorted);
+        return sorted;
     },
+
 
     //分割
     _splitFromFix: function(schedule){
@@ -30,6 +23,20 @@ var SCHEDULE_UTIL = {
         });
     },
 
+    // 開始時刻にintを埋め込み
+    set_start_at_int: function(schedule){
+        let ret = schedule.map(function(s){
+            if (s.start_at == ""){
+                s["start_at_int"] = "";
+            } else{
+                let res = s.start_at.split(":");
+                s["start_at_int"] = parseInt(res[0]) * 60 + parseInt(res[1]);
+            }
+            return s;
+        });
+        return ret;
+    },
+    
     // 開始時刻で並び替え
     _sort: function(schedule){
         return schedule.sort(function(a, b) {
