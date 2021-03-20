@@ -9,18 +9,57 @@ import { withRouter } from "react-router-dom";
 // 参考のために関数を少し実装しておきました。
 class Form extends React.Component {
 	state = {
+		task: {
+			title: "",
+			task_time_min: 0,
+			start_at: "00:00",
+			is_fix: false
+		},
 		tasks: [],
 		day_start_at: '',
 		day_end_at: '',
 	};
+
+	// taskの更新
+	setTitle = (title) => {
+		console.log(title);
+		let task = this.state.task;
+		task.title = title;
+		this.setState({ task });
+	}
+
+	// taskの更新
+	setTaskTimeMin = (task_time_min) => {
+		console.log(task_time_min);
+		let task = this.state.task;
+		task.task_time_min = task_time_min;
+		this.setState({ task });
+	}
+
+	// taskの更新
+	setStartAt = (start_at) => {
+		console.log(start_at);
+		let task = this.state.task;
+		task.start_at = start_at;
+		this.setState({ task });
+	}
+
+	// taskの更新
+	setIsFix = (is_fix) => {
+		console.log(is_fix);
+		let task = this.state.task;
+		task.is_fix = is_fix;
+		this.setState({ task });
+	}
+
 
 	// taskというマップを受け取ってstateのtasksに格納する関数
 	setTasks = (task) => {
 		// consoleにprintして確認
 		console.log(task);
 		// TODO: stateのtasks(list)にtask(map)をpushする処理
-		this.state.tasks.concat(task);
-		let tasks = this.state.tasks;
+		this.state.tasks.push(task);
+		console.log(this.state.tasks);
 		// TODO: tasksが更新されたらstateに再度格納する処理
 		this.setState({ "tasks": this.state.tasks });
 	}
@@ -39,7 +78,28 @@ class Form extends React.Component {
 		this.setState({ day_end_at });
 	}
 
-	// 画面をclickされた時に発火させるための関数
+	// タスク追加ボタンをclickされたされた時に発火させるための関数
+	handleAdd = (event) => {
+		event.preventDefault();
+		console.log(this.state.task);
+		this.setTasks(this.state.task);
+		// this.setState({
+		// tasks: [
+		// 	...this.state.tasks,
+		// 	{
+		// 		title: this.state.tasks.title,
+		// 		task_time_min: this.state.tasks.task_time_min,
+		// 		start_at: this.state.tasks.start_at,
+		// 		is_fix: this.state.tasks.is_fix
+		// 	}],
+		// title:"",
+		// task_time_min:"",
+		// start_at:"",
+		// is_fix:""
+		// });
+	}
+
+	// スケジュール作成ボタンをclickされた時に発火させるための関数
 	handleClick = () => {
 		this.props.container.setFormProps({
 			tasks: this.state.tasks,
@@ -94,32 +154,75 @@ class Form extends React.Component {
 	}
 
 	render() {
+		console.log(this.state.tasks);
 		return (
 			<div>
-				// TODO: ここにformなどを埋めていく
-				// 以下の例を見ると雰囲気が掴めるかも
 				<form>
 					<label>
-						タイトル
-						<input type="text" onChange={e => this.setTasks(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.title}/>
+						タスク名
+						<input type="text" onChange={e => this.setTitle(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.title}/>
 						<div className="unit"></div>
 					</label>
 				</form>
 
 				<form>
 					<label>
-						人数
-						<input type="text" onChange={e => this.setPartNum(parseInt(e.currentTarget.value, 10))} value={this.state.participate_num} />
-						<div className="unit">人</div>
+						所要時間
+						<input type="text" onChange={e => this.setTaskTimeMin(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.task_time_min}/>
+						<div className="unit"></div>
 					</label>
 				</form>
 
-				<div className="next">
-					<div className="next_a" onClick={this.handleClick}>
-						<img src="image/coin.png" alt="img" className="next_icon"/>
-						<p>割り勘</p>
+				<form>
+					<label>
+						開始時間
+						<input type="text" onChange={e => this.setStartAt(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.start_at}/>
+						<div className="unit"></div>
+					</label>
+				</form>
+
+				<div className="">
+					{/* <img src="image/coin.png" alt="img" className="next_icon"/> */}
+					<div className="next_a" onClick={this.handleAdd}>
+						<p>タスク追加</p>
 					</div>
                 </div>
+
+				<hr></hr>
+
+				{/*
+				<form>
+					<label>
+						いつから
+						<input type="text" onChange={e => this.setDayStartAt(parseInt(e.currentTarget.value, 10))} value={this.state.day_start_at} />
+						<div className="unit"></div>
+					</label>
+				</form>
+
+				<form>
+					<label>
+						いつまで
+						<input type="text" onChange={e => this.setDayEndAt(parseInt(e.currentTarget.value, 10))} value={this.state.day_end_at} />
+						<div className="unit"></div>
+					</label>
+				</form>
+				*/}
+
+				<div className="">
+					{/* <img src="image/coin.png" alt="img" className="next_icon"/> */}
+					<div className="next_a" onClick={this.handleClick}>
+						<p>スケジュール生成</p>
+					</div>
+                </div>
+
+				{this.state.tasks.map((l, idx) => (
+					<div key={idx}>
+						<p>title:{l.title}</p>
+						<p>task_time_min:{l.task_time_min}</p>
+						<p>start_at:{l.start_at}</p>
+						<p>is_fix:{l.is_fix}</p>
+					</div>
+				))}
 			</div>
 		);
 	}
