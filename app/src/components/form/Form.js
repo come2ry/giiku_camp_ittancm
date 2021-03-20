@@ -19,8 +19,10 @@ class Form extends React.Component {
 		// consoleにprintして確認
 		console.log(task);
 		// TODO: stateのtasks(list)にtask(map)をpushする処理
+		this.state.tasks.concat(task);
+		let tasks = this.state.tasks;
 		// TODO: tasksが更新されたらstateに再度格納する処理
-		// this.setState({ tasks });
+		this.setState({ "tasks": this.state.tasks });
 	}
 
 	// day_start_atという値を受け取ってstateに格納する関数
@@ -31,7 +33,7 @@ class Form extends React.Component {
 	}
 
 	// day_end_atという値を受け取ってstateに格納する関数
-	setEndAt = (day_end_at) => {
+	setDayEndAt = (day_end_at) => {
 		// consoleにprintして確認
 		console.log(day_end_at);
 		this.setState({ day_end_at });
@@ -45,6 +47,38 @@ class Form extends React.Component {
 			day_end_at: this.state.day_end_at,
 			isSet: true
 		});
+		/* この時、this.stateは以下のようになっているはず
+		this.state = {
+			tasks : [
+				{
+					"title": "タスク1",
+					"task_time_min": 30,
+					"start_at": "09:00",
+					"is_fix": true
+				},
+				{
+					"title": "タスク2",
+					"task_time_min": 60,
+					"start_at": "",
+					"is_fix": false
+				},
+				{
+					"title": "タスク3",
+					"task_time_min": 150,
+					"start_at": "",
+					"is_fix": false
+				},
+				{
+					"title": "タスク4",
+					"task_time_min": 10,
+					"start_at": "",
+					"is_fix": false
+				}
+			],
+			day_start_at: "08:00",
+			day_end_at: "23:30"
+		}
+		*/
 	}
 
 	// おそらく画面遷移直前に発動する関数？
@@ -64,18 +98,18 @@ class Form extends React.Component {
 			<div>
 				// TODO: ここにformなどを埋めていく
 				// 以下の例を見ると雰囲気が掴めるかも
-				{/* <form>
+				<form>
 					<label>
-						合計金額
-						<input type="number" onChange={e => this.setTotalFee(parseInt(e.currentTarget.value, 10))} value={this.state.total_fee}/>
-						<div className="unit">円</div>
+						タイトル
+						<input type="text" onChange={e => this.setTasks(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.title}/>
+						<div className="unit"></div>
 					</label>
 				</form>
 
 				<form>
 					<label>
 						人数
-						<input type="number" onChange={e => this.setPartNum(parseInt(e.currentTarget.value, 10))} value={this.state.participate_num} />
+						<input type="text" onChange={e => this.setPartNum(parseInt(e.currentTarget.value, 10))} value={this.state.participate_num} />
 						<div className="unit">人</div>
 					</label>
 				</form>
@@ -85,12 +119,15 @@ class Form extends React.Component {
 						<img src="image/coin.png" alt="img" className="next_icon"/>
 						<p>割り勘</p>
 					</div>
-                </div> */}
+                </div>
 			</div>
 		);
 	}
 }
 
+// containerはどのページからもアクセスできる値の格納場所
+// SubscribeでAppContainerのcontainerを下ろしてきて、
+// Formコンポーネント内でcontainerという変数でアクセスできるように渡す
 class FormWrapper extends React.Component {
 	render() {
 		return (
