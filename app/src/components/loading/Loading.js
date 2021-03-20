@@ -12,11 +12,11 @@ class Loading extends React.Component{
     }
 
     render() {
-        if (!this.props.container.isLoading()) {
-            return (
-                <Route exact path='/loading' render={() => <Redirect to={'/'} />} />
-            );
-        }
+        // if (!this.props.container.isLoading()) {
+        //     return (
+        //         <Route exact path='/loading' render={() => <Redirect to={'/'} />} />
+        //     );
+        // }
 
         return(
             <div>
