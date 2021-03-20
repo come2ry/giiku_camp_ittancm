@@ -8,13 +8,9 @@ import { withRouter } from "react-router-dom";
 // TODO@shangsenkota: 杉森さん(@shangsenkota) ここを実装していってください。
 // 参考のために関数を少し実装しておきました。
 class Form extends React.Component {
+	initialTask = { title: "", task_time_min: 0, start_at: "00:00", is_fix: false };
 	state = {
-		task: {
-			title: "",
-			task_time_min: 0,
-			start_at: "00:00",
-			is_fix: false
-		},
+		task: this.initialTask,
 		tasks: [],
 		day_start_at: '',
 		day_end_at: '',
@@ -61,7 +57,7 @@ class Form extends React.Component {
 		this.state.tasks.push(task);
 		console.log(this.state.tasks);
 		// TODO: tasksが更新されたらstateに再度格納する処理
-		this.setState({ "tasks": this.state.tasks });
+		this.setState({ "task": this.initialTask, "tasks": this.state.tasks });
 	}
 
 	// day_start_atという値を受け取ってstateに格納する関数
@@ -160,7 +156,7 @@ class Form extends React.Component {
 				<form>
 					<label>
 						タスク名
-						<input type="text" onChange={e => this.setTitle(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.title}/>
+						<input type="text" onChange={e => this.setTitle(e.currentTarget.value)} value={this.state.tasks.title}/>
 						<div className="unit"></div>
 					</label>
 				</form>
@@ -176,7 +172,7 @@ class Form extends React.Component {
 				<form>
 					<label>
 						開始時間
-						<input type="text" onChange={e => this.setStartAt(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.start_at}/>
+						<input type="time" onChange={e => this.setStartAt(e.currentTarget.value)} value={this.state.tasks.start_at}/>
 						<div className="unit"></div>
 					</label>
 				</form>
@@ -190,11 +186,10 @@ class Form extends React.Component {
 
 				<hr></hr>
 
-				{/*
 				<form>
 					<label>
 						いつから
-						<input type="text" onChange={e => this.setDayStartAt(parseInt(e.currentTarget.value, 10))} value={this.state.day_start_at} />
+						<input type="time" onChange={e => this.setDayStartAt(e.currentTarget.value)} value={this.state.day_start_at} />
 						<div className="unit"></div>
 					</label>
 				</form>
@@ -202,11 +197,10 @@ class Form extends React.Component {
 				<form>
 					<label>
 						いつまで
-						<input type="text" onChange={e => this.setDayEndAt(parseInt(e.currentTarget.value, 10))} value={this.state.day_end_at} />
+						<input type="time" onChange={e => this.setDayEndAt(e.currentTarget.value)} value={this.state.day_end_at} />
 						<div className="unit"></div>
 					</label>
 				</form>
-				*/}
 
 				<div className="">
 					{/* <img src="image/coin.png" alt="img" className="next_icon"/> */}
