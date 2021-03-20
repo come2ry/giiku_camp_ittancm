@@ -11,15 +11,15 @@ var SCHEDULE_UTIL = {
         schedule = SCHEDULE_UTIL.set_start_at_int(schedule);
         let sorted = SCHEDULE_UTIL._sort(schedule);
         let splited = SCHEDULE_UTIL._splitFromFix(sorted);
-        
+
         // 予定をシャッフル
-        SCHEDULE_UTIL._shuffle_sorted_schedule(splited);
-        //console.log(sorted);
-        return sorted;
+        let result = SCHEDULE_UTIL._shuffle_sorted_schedule(splited);
+        // console.log(result);
+        return result;
     },
 
 
-    // 予約間の空白秒（next省略で終日）
+    // タスク間の空白秒（next省略で終日）
     get_margin(prev_task, next_task=null){
         let ret = 0;
         if (next_task == null){
@@ -50,7 +50,33 @@ var SCHEDULE_UTIL = {
 
     // ランダムなタスクを取得し、元配列から削除
     take_random_task: function(schedule, margin=null, all=true){
-        return false;
+        let ret = [];
+        let min = 0;
+        schedule = SCHEDULE_UTIL.shuffle_array(schedule);
+        for (let i = (schedule.length - 1); i>=0; i--){
+            min += schedule[i].task_time_min;
+            if (min <= margin){
+                ret.push(schedule.pop());
+                if (all == false){
+                    return ret;
+                }
+            } else{
+                return ret;
+            }
+        }
+        return ret;
+    },
+
+    // 配列シャッフル
+    shuffle_array: function(arr){
+        for (let i = 0; i < (arr.length*50); i++){
+            let rnd = Math.floor(Math.random()*arr.length);
+            let str1 = arr[0];
+            let str2 = arr[rnd];
+            arr[rnd] = str1;
+            arr[0] = str2;
+        }
+        return arr;
     },
 
 
@@ -72,9 +98,9 @@ var SCHEDULE_UTIL = {
     _sort: function(schedule){
         return schedule.sort(function(a, b) {
             if (a.start_at_int > b.start__at_int) {
-                return 1;
-            } else {
                 return -1;
+            } else {
+                return 1;
             }
         });
     },
