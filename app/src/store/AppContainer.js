@@ -38,6 +38,10 @@ class AppContainer extends Container{
 
     // 以下はサンプルなので気にしないで。
     // コードの書き方の参考にはなるかも。
+    isLoading = () => {
+        return this.state.isSet;
+    }
+
     // isConfirm = () => {
     //     if (this.state.total_fee === '' || this.state.participate_num === '') {
     //         return false;
@@ -46,7 +50,7 @@ class AppContainer extends Container{
     //     }
     // }
 
-    // isRoulette = () => {
+    // isLoading = () => {
     //     if (this.state.total_change === '') {
     //         return false;
     //     } else {
@@ -65,6 +69,10 @@ class AppContainer extends Container{
 	// setPartNum = (participate_num) => {
 	// 	this.setState({ participate_num });
     // }
+
+    setFormProps = ({ tasks, day_start_at, day_end_at, isSet }) => {
+        this.setState({ tasks, day_start_at, day_end_at, isSet });
+    }
 
     setIsSet = ({ isSet }) => {
         this.setState({ isSet });
@@ -85,69 +93,46 @@ class AppContainer extends Container{
     //     });
     // }
 
-    // imgStop = () => {
-    //     this.setState({
-    //         animation_run: false,
-    //         result: true,
-    //         isOpenModal: true
-    //     });
-    // }
+    imgStop = () => {
+        this.setState({
+            animation_run: false,
+            result: true,
+            isOpenModal: true
+        });
+    }
 
-    // imgClick = (e) => {
-    //     if (this.state.animation_run) { return }
-    //     /* TODO: <img>にstyle id: spin-ban を付与　*/
-    //     let listItems;
+    imgClick = (e) => {
+        if (this.state.animation_run) { return }
+        /* TODO: <img>にstyle id: spin-ban を付与　*/
+        // let listItems;
 
-    //     // var total_change = Math.floor(Math.random() * (max + 1 - min)) + min;
-    //     var total_change = this.state.total_change;
-    //     fetch(`${url_root}/roulette?total_change=${total_change}`)
-    //         .then(response => response.json())
-    //         .then(_result => {
-    //             let result = _result.result;
-    //             console.log(result);
-    //             var img_num = result.length;
-    //             let h;
-    //             if (img_num >= 2) {
-    //                 h = window.parent.screen.height * 3 / 10 / img_num;
-    //             }
+        // var total_change = Math.floor(Math.random() * (max + 1 - min)) + min;
+        // var total_change = this.state.total_change;
 
-    //             listItems = result.map((r, i) =>
-    //                 <div key={i}>
-    //                     <a href={r.item_url} target='_blank' rel="noreferrer noopener">
-    //                         <img src={r.item_image_url} alt="img" className="mono_img" style={{ height: h }} />
-    //                     </a>
-    //                     <p className='mono_p'>{r.item_name} {r.item_price} x {r.num}</p>
-    //                 </div>
+        this.setState({
+            animation_run: true,
+            result: false,
+        })
 
-    //             );
-    //             this.setState({
-    //                 animation_run: true,
-    //                 result: false,
-    //                 total_change: total_change,
-    //                 listItems: listItems
-    //             })
-    //             console.log(listItems);
-    //         });
+        this.setState({
+            imgStopAction: setTimeout(this.imgStop, 3000)
+        })
+    }
 
-    //     this.setState({
-    //         imgStopAction: setTimeout(this.imgStop, 3000)
-    //     })
-    // }
+    closeModal = () => {
+        this.setState({ isOpenModal: false });
+    }
 
-    // closeModal = () => {
-    //     this.setState({ isOpenModal: false });
-    // }
-
-    // leftRoulette = () => {
-    //     this.setState({
-    //         animation_run: false,
-    //         result: false,
-    //         total_change: '',
-    //         listItems: [],
-    //         isOpenModal: false
-    //     });
-    //     clearTimeout(this.state.imgStopAction);
-    // }
+    leftLoading = () => {
+        this.setState({
+            animation_run: false,
+            result: false,
+            total_change: '',
+            listItems: [],
+            isOpenModal: false
+        });
+        clearTimeout(this.state.imgStopAction);
+    }
 }
 
 export default AppContainer;
