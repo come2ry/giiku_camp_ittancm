@@ -9,7 +9,7 @@ import { withRouter } from "react-router-dom";
 // 参考のために関数を少し実装しておきました。
 class Form extends React.Component {
 	state = {
-		task: { title: "", task_time_min: 0, start_at: "00:00", is_fix: false },
+		task: { title: "", task_time_min: 0, start_at: "--:--", is_fix: false },
 		tasks: [],
 		day_start_at: '',
 		day_end_at: '',
@@ -178,7 +178,16 @@ class Form extends React.Component {
 				<div className="task-scroll">
 					{this.state.tasks.map((l, idx) => (
 						<div key={idx} className="task">
-							<p className="start_at">{l.start_at}~</p>
+							<p className="start_at">{l.start_at}</p>
+							{/* {if(l.start_at == "--:--") {
+								return (
+									<p className="start_at">開始時刻未定</p>
+								)
+							}else{
+								return (
+									<p className="start_at">{l.start_at}~</p>
+								)
+							}} */}
 							<p className="task_time_min">{l.task_time_min}分</p>
 							<p className="title">{l.title}</p>
 							{/* <p>is_fix:{l.is_fix}</p> */}
@@ -187,6 +196,24 @@ class Form extends React.Component {
 						</div>
 					))}
 				</div>
+
+				<form>
+					<label>
+						起床時刻
+						<input type="time" onChange={e => this.setDayStartAt(e.currentTarget.value)} value={this.state.day_start_at} />
+						<div className="unit"></div>
+					</label>
+				</form>
+
+				<form>
+					<label>
+						就寝時刻
+						<input type="time" onChange={e => this.setDayEndAt(e.currentTarget.value)} value={this.state.day_end_at} />
+						<div className="unit"></div>
+					</label>
+				</form>
+
+				<hr></hr>
 
 				<form>
 					<label>
@@ -219,23 +246,8 @@ class Form extends React.Component {
 					</div>
                 </div>
 
-				<hr></hr>
+				
 
-				<form>
-					<label>
-						いつから
-						<input type="time" onChange={e => this.setDayStartAt(e.currentTarget.value)} value={this.state.day_start_at} />
-						<div className="unit"></div>
-					</label>
-				</form>
-
-				<form>
-					<label>
-						いつまで
-						<input type="time" onChange={e => this.setDayEndAt(e.currentTarget.value)} value={this.state.day_end_at} />
-						<div className="unit"></div>
-					</label>
-				</form>
 
 				<div className="next">
 					{/* <img src="image/coin.png" alt="img" className="next_icon"/> */}
