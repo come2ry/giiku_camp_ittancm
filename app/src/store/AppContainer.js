@@ -24,6 +24,10 @@ class AppContainer extends Container{
         day_end_at: "00:00", // デフォルト値. ユーザにFormで入力してもらったらそれに書き換える
         isSet: false,
 
+        task_colors: [
+            "#173F5F", "#20639b", "#3caea3", "#f6d55c", "#ed553b", "#179ad1", "#6549DA", "257A41", "#17d181", "#9CDEF6", 
+        ],
+
         // 以下サンプルなので気にしないで
         total_fee: '', // 例
         participate_num: '', // 例

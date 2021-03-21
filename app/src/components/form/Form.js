@@ -8,12 +8,12 @@ import { withRouter } from "react-router-dom";
 // TODO@shangsenkota: 杉森さん(@shangsenkota) ここを実装していってください。
 // 参考のために関数を少し実装しておきました。
 class Form extends React.Component {
-	initialTask = { title: "", task_time_min: 0, start_at: "00:00", is_fix: false };
 	state = {
-		task: this.initialTask,
+		task: { title: "", task_time_min: 0, start_at: "00:00", is_fix: false },
 		tasks: [],
 		day_start_at: '',
 		day_end_at: '',
+		index: 0
 	};
 
 	// taskの更新
@@ -37,6 +37,11 @@ class Form extends React.Component {
 		console.log(start_at);
 		let task = this.state.task;
 		task.start_at = start_at;
+		if(start_at == null){
+			task.is_fix = false
+		}else{
+			task.is_fix = true
+		}
 		this.setState({ task });
 	}
 
@@ -57,7 +62,10 @@ class Form extends React.Component {
 		this.state.tasks.push(task);
 		console.log(this.state.tasks);
 		// TODO: tasksが更新されたらstateに再度格納する処理
-		this.setState({ "task": this.initialTask, "tasks": this.state.tasks });
+		// const i = this.state.index;
+		// document.getElementsByClassName('task').style.backgroundColor = this.props.container.state.task_colors[i];
+		this.setState({ "task": { title: "", task_time_min: 0, start_at: "00:00", is_fix: false }, "tasks": this.state.tasks });
+		// , "index": i + 1
 	}
 
 	// day_start_atという値を受け取ってstateに格納する関数
@@ -137,6 +145,19 @@ class Form extends React.Component {
 		*/
 	}
 
+	// handleRemove = (idx) => {
+	// 	this.state.tasks.splice(idx, 1);
+	// 	this.setState({
+	// 		"task": { title: "", task_time_min: 0, start_at: "00:00", is_fix: false }, "tasks": this.state.tasks
+	// 	});
+	// }
+
+	// handleRemoveTask = (index) => {
+	// 	const newTasks = [...this.state.tasks]
+	// 	newTasks.splice(index,1)
+	// 	this.setTasks(newTasks)
+	// }
+
 	// おそらく画面遷移直前に発動する関数？
 	// 大文字の関数はReactがデフォルトで用意した関数で、特定の条件になると呼ばれる
 	UNSAFE_componentWillUpdate() {
@@ -152,11 +173,25 @@ class Form extends React.Component {
 	render() {
 		console.log(this.state.tasks);
 		return (
-			<div>
+			<div className="task-wrapper">
+
+				<div className="task-scroll">
+					{this.state.tasks.map((l, idx) => (
+						<div key={idx} className="task">
+							<p className="start_at">{l.start_at}~</p>
+							<p className="task_time_min">{l.task_time_min}分</p>
+							<p className="title">{l.title}</p>
+							{/* <p>is_fix:{l.is_fix}</p> */}
+							{/* <button onClick={this.handleRemove(idx)}>削除</button> */}
+							<hr></hr>
+						</div>
+					))}
+				</div>
+
 				<form>
 					<label>
 						タスク名
-						<input type="text" onChange={e => this.setTitle(e.currentTarget.value)} value={this.state.tasks.title}/>
+						<input type="text" className="divided" onChange={e => this.setTitle(e.currentTarget.value)} value={this.state.task.title}/>
 						<div className="unit"></div>
 					</label>
 				</form>
@@ -164,20 +199,20 @@ class Form extends React.Component {
 				<form>
 					<label>
 						所要時間
-						<input type="text" onChange={e => this.setTaskTimeMin(parseInt(e.currentTarget.value, 10))} value={this.state.tasks.task_time_min}/>
-						<div className="unit"></div>
+						<input type="number" className="divided" onChange={e => this.setTaskTimeMin(parseInt(e.currentTarget.value, 10))} value={this.state.task.task_time_min}/>
+						<div className="unit">分</div>
 					</label>
 				</form>
 
 				<form>
 					<label>
-						開始時間
-						<input type="time" onChange={e => this.setStartAt(e.currentTarget.value)} value={this.state.tasks.start_at}/>
+						開始時刻
+						<input type="time" onChange={e => this.setStartAt(e.currentTarget.value)} value={this.state.task.start_at}/>
 						<div className="unit"></div>
 					</label>
 				</form>
 
-				<div className="">
+				<div className="next">
 					{/* <img src="image/coin.png" alt="img" className="next_icon"/> */}
 					<div className="next_a" onClick={this.handleAdd}>
 						<p>タスク追加</p>
@@ -202,21 +237,13 @@ class Form extends React.Component {
 					</label>
 				</form>
 
-				<div className="">
+				<div className="next">
 					{/* <img src="image/coin.png" alt="img" className="next_icon"/> */}
 					<div className="next_a" onClick={this.handleClick}>
 						<p>スケジュール生成</p>
 					</div>
                 </div>
 
-				{this.state.tasks.map((l, idx) => (
-					<div key={idx}>
-						<p>title:{l.title}</p>
-						<p>task_time_min:{l.task_time_min}</p>
-						<p>start_at:{l.start_at}</p>
-						<p>is_fix:{l.is_fix}</p>
-					</div>
-				))}
 			</div>
 		);
 	}
