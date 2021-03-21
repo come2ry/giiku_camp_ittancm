@@ -89,18 +89,25 @@ var SCHEDULE_UTIL = {
                 return 1;
             }
         });
-        while (true){
+        for (let i = schedule.length - 1; i >= 0; i--){
             if (schedule.length == 0){
                 return ret;
             }
-            min += schedule[schedule.length - 1].task_time_min;
+            min += schedule[i].task_time_min;
             if (min <= margin){
-                ret.push(schedule.pop());
+                let new_object = {};
+                new_object["title"] = schedule[i].title;
+                new_object["start_at"] = schedule[i].start_at;
+                new_object["task_time_min"] = schedule[i].task_time_min;
+                new_object["start_at_int"] = schedule[i].task_time_int;
+                new_object["is_fix"] = schedule[i].is_fix;
+                ret.push(new_object);
+                schedule.splice(i, 1);
                 if (all == false){
                     return ret;
                 }
             } else{
-                return ret;
+                min -= schedule[i].task_time_min;
             }
         }
         return ret;
@@ -192,7 +199,7 @@ var SCHEDULE_UTIL = {
         let s_len = schedule.length;
         for (let i = s_len-1; i >= 0; i--){
             if (schedule[i].title == ""){
-                delete schedule[i];
+                schedule.splice(i, 1);
             }
         }
         return schedule.sort(function(a, b) {
