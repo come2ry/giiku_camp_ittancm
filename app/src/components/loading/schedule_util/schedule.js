@@ -29,8 +29,15 @@ var SCHEDULE_UTIL = {
         // 予定をシャッフル
         let result = SCHEDULE_UTIL._shuffle_sorted_schedule(splited);
         result = SCHEDULE_UTIL._form_schedule(result);
+        
+        // 結局、その日1日のはじめと終わり
+        start_at = result[0].start_at;
+        end_at = SCHEDULE_UTIL.time2str(result[result.length - 1].start_at_int + result[result.length - 1].task_time_min);
+
         console.log(result);
-        return result;
+        console.log(start_at);
+        console.log(end_at);
+        return [result, start_at, end_at];
     },
 
 
@@ -57,8 +64,8 @@ var SCHEDULE_UTIL = {
 
     // 分(int)から文字列
     time2str: function(min_time){
-        let hour = Math.floor(min_time/60);
-        let min = min_time % 60;
+        let hour = ("000" + Math.floor(min_time/60)).slice(-2);
+        let min = ("000" + min_time%60).slice(-2);
         return hour + ":" + min;
     },
 
