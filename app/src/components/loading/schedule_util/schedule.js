@@ -6,20 +6,20 @@ var SCHEDULE_UTIL = {
 
 
     // 予定表シャッフル
-    shuffle: function(schedule, ignore_sleep=true, start_at="07:00", end_at="23:00"){
+    shuffle: function(schedule, ignore_sleep=false, start_at="07:00", end_at="23:00"){
         // スリープブロックビルド
         let start_at_int = SCHEDULE_UTIL.str2time(start_at);
-        if (ignore_sleep){
-            schedule.push({"title": "", "task_time_min": 0, "start_at": start_at, "is_fix": false});
-            schedule.push({"title": "", "task_time_min": SCHEDULE_UTIL.constants.DAY_MINUTES - SCHEDULE_UTIL.str2time(end_at), "start_at": end_at, "is_fix": false});
+        if (ignore_sleep == false){
+            schedule.push({"title": "", "task_time_min": 0, "start_at": start_at, "is_fix": true});
         } else{
             let sleep_count = Math.floor(start_at_int/60);
             schedule.push({"title": "", "task_time_min": 0, "start_at": SCHEDULE_UTIL.time2str(0), "is_fix": false});
             for (let i=1; i<sleep_count; i++){
-                schedule.push({"title": "", "task_time_min": 60, "start_at": SCHEDULE_UTIL.time2str(i * 60), "is_fix": false});
+                schedule.push({"title": "", "task_time_min": 60, "start_at": "", "is_fix": false});
             }
-            schedule.push({"title": "", "task_time_min": SCHEDULE_UTIL.constants.DAY_MINUTES - SCHEDULE_UTIL.str2time(end_at), "start_at": end_at, "is_fix": false});
+            schedule.push({"title": "", "task_time_min": start_at_int%60, "start_at": "", "is_fix": false});
         }
+        schedule.push({"title": "", "task_time_min": SCHEDULE_UTIL.constants.DAY_MINUTES - SCHEDULE_UTIL.str2time(end_at), "start_at": end_at, "is_fix": true});
         
         // 基本処理
         schedule = SCHEDULE_UTIL.set_start_at_int(schedule);
@@ -77,10 +77,22 @@ var SCHEDULE_UTIL = {
     // ランダムなタスクを取得し、元配列から削除
     take_random_task: function(schedule, margin=null, all=true){
         let ret = [];
+        if (schedule.length == 0){
+            return ret;
+        }
         let min = 0;
-        schedule = SCHEDULE_UTIL.shuffle_array(schedule);
-        for (let i = (schedule.length - 1); i>=0; i--){
-            min += schedule[i].task_time_min;
+        schedule = schedule.sort(function(a, b) {
+            if (a.task_time_min > b.task_time_min) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        while (true){
+            if (schedule.length == 0){
+                return ret;
+            }
+            min += schedule[schedule.length - 1].task_time_min;
             if (min <= margin){
                 ret.push(schedule.pop());
                 if (all == false){
@@ -112,9 +124,9 @@ var SCHEDULE_UTIL = {
         let in_fixed = [];
         schedule.forEach(function(element){
             if (element.is_fix){
-                fixed.push(element);
-            } else{
                 in_fixed.push(element);
+            } else{
+                fixed.push(element);
             }
         });
         return {"fixed": fixed, "in_fixed": in_fixed};
@@ -141,7 +153,12 @@ var SCHEDULE_UTIL = {
     // 予定をシャッフル（_sort、splitを通した後）
     _shuffle_sorted_schedule: function(schedule){
         let result = [];
+        let index_arr = [];
         for (let i = 0; i<schedule.in_fixed.length; i++){
+            index_arr.push(i);
+        }
+        index_arr = SCHEDULE_UTIL.shuffle_array(index_arr);
+        index_arr.forEach(function(i){
             let margin = 0;
             if (i < (schedule.in_fixed.length - 1)){
                 margin = SCHEDULE_UTIL.get_margin(schedule.in_fixed[i], schedule.in_fixed[i+1]);
@@ -165,7 +182,7 @@ var SCHEDULE_UTIL = {
                 })
                 result = result.concat(ret);
             }
-        }
+        });
         return result;
     }
 }
