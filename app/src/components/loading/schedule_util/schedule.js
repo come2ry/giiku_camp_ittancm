@@ -6,14 +6,14 @@ var SCHEDULE_UTIL = {
 
 
     // 予定表シャッフル
-    shuffle: function(schedule, ignore_sleep=false, start_at="07:00", end_at="23:00"){
+    shuffle: function(schedule, ignore_sleep=true, start_at="07:00", end_at="23:00"){
         // スリープブロックビルド
         let start_at_int = SCHEDULE_UTIL.str2time(start_at);
         if (ignore_sleep == false){
             schedule.push({"title": "", "task_time_min": 0, "start_at": start_at, "is_fix": true});
         } else{
             let sleep_count = Math.floor(start_at_int/60);
-            schedule.push({"title": "", "task_time_min": 0, "start_at": SCHEDULE_UTIL.time2str(0), "is_fix": false});
+            schedule.push({"title": "", "task_time_min": 0, "start_at": SCHEDULE_UTIL.time2str(0), "is_fix": true});
             for (let i=1; i<sleep_count; i++){
                 schedule.push({"title": "", "task_time_min": 60, "start_at": "", "is_fix": false});
             }
@@ -28,6 +28,7 @@ var SCHEDULE_UTIL = {
 
         // 予定をシャッフル
         let result = SCHEDULE_UTIL._shuffle_sorted_schedule(splited);
+        result = SCHEDULE_UTIL._form_schedule(result);
         console.log(result);
         return result;
     },
@@ -184,5 +185,22 @@ var SCHEDULE_UTIL = {
             }
         });
         return result;
+    },
+
+    // 返却用に予定を生計
+    _form_schedule: function(schedule){
+        let s_len = schedule.length;
+        for (let i = s_len-1; i >= 0; i--){
+            if (schedule[i].title == ""){
+                delete schedule[i];
+            }
+        }
+        return schedule.sort(function(a, b) {
+            if (a.start_at_int > b.start_at_int) {
+                return 1;
+            } else {
+                return - 1;
+            }
+        });
     }
 }
